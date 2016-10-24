@@ -7,10 +7,16 @@
 <div>
   <h1> RegiSTAR</h1>
 
-
+    <h3>
+<!-- need to work out how to join name and surname (using key - value pairs and how to start from index 1)   -->
+      {% for person in f_names %}
+        <h4> {{person}} </h4>
+      {% endfor %}
+    </h3>
   </div>
 
 
+<!-- The form needs to be seprated into first name and last name (optional company?) -->
   <div id="contact-form">
     <h1> Not on the list? Add your name below:</h1>
     <form method="post" action="/signup">
