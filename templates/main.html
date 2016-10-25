@@ -7,12 +7,14 @@
 <body>
 <div>
   <h1> RegiSTAR</h1>
+  <h3> Event name </h3>
+  <h3> {{date}} </h3>
 
     <h3>
-      {% for person in f_names %}
-        <div class= "attendee">
-            <h4> {{person}} {{l_names[f_names.index(person)]}} </h4>
-            <p> {{companies[f_names.index(person)]}} </p>
+      {% for i in f_names %}
+        <div class= "attendee" id="attendee-{{loop.index0}}">
+            <h4> {{f_names[loop.index0]}} {{l_names[loop.index0]}} </h4>
+            <p> {{companies[loop.index0]}} </p>
         </div>
       {% endfor %}
     </h3>
@@ -36,14 +38,32 @@
   </div>
 
 
+<!-- make this correspond to Jquery so when this button is clicked the list of those who attended / did not attended is generated -->
+<!-- This should send out the emails to present and absent  -->
+  <div>
+    <button> Submit register for this event</button>
+  </div>
+
 <script>
+// use Jquery id to post
 
   $(document).ready(function(){
+
     $(".attendee").on("click", function() {
-        $(this).css("background-color", "green");
+        $(this).toggleClass("present");
+    });
+
+    $("button").click(function(){
+      var present_attendees_id = [];
+
+      $(".attendee").each(function(){
+        if( $(this).hasClass("present") ) {
+          present_attendees_id.push( $(this).attr("id") )
+        }
+      })
+      console.log(present_attendees_id)
     });
   });
-
 </script>
 
 </body>

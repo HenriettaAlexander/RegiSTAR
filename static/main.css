@@ -6,6 +6,10 @@ div .attendee{
   border: solid black 2px;
 }
 
+.present{
+  background-color: green;
+}
+
 p{
   color: white;
 }
