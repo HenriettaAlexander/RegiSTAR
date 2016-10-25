@@ -1,3 +1,16 @@
 body{
   background-color: red;
 }
+
+div .attendee{
+  border: solid black 2px;
+}
+
+p{
+  color: white;
+}
+
+button{
+  background: red;
+  border: none:
+}

@@ -1,6 +1,7 @@
 <!doctype html>
 <head>
   <title> RegiSTAR </title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <link rel="stylesheet" type="text/css" href="../static/main.css">
 </head>
 <body>
@@ -8,9 +9,11 @@
   <h1> RegiSTAR</h1>
 
     <h3>
-<!-- need to work out how to join name and surname (using key - value pairs and how to start from index 1)   -->
       {% for person in f_names %}
-        <h4> {{person}} </h4>
+        <div class= "attendee">
+            <h4> {{person}} {{l_names[f_names.index(person)]}} </h4>
+            <p> {{companies[f_names.index(person)]}} </p>
+        </div>
       {% endfor %}
     </h3>
   </div>
@@ -27,4 +30,15 @@
       <input type="submit" value="Submit" id="submit-button"/>
     </form>
   </div>
+
+  <script>
+
+
+$(document).ready(function(){
+  $(".attendee").on("click", function() {
+      $(this).css("background-color", "green");
+  });
+});
+</script>
+
 </body>
