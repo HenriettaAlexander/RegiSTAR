@@ -20,25 +20,30 @@
 
 
 <!-- The form needs to be seprated into first name and last name (optional company?) -->
-  <div id="contact-form">
+  <div id="signup-form">
     <h1> Not on the list? Add your name below:</h1>
     <form method="post" action="/signup">
-      <label for="name">Name: </label>
-      <input type="text" id="name" name="name" value="" placeholder="Firstname Surname" required="required" autofocus="autofocus"/>
+      <label for="first_name">First name: </label>
+      <input type="text" id="first_name" name="first_name" value="" placeholder="Firstname" required="required" autofocus="autofocus"/>
+      <label for="last_name">Last Name: </label>
+      <input type="text" id="last_name" name="last_name" value="" placeholder="Surname" required="required" autofocus="autofocus"/>
+      <label for="company">Company: </label>
+      <input type="text" id="company" name="company" value="" placeholder="Company" required="required" autofocus="autofocus"/>
       <label for="email">Email Address: </label>
       <input type="email" id="email" name="email" value="" placeholder="joe@bloggs.com" required="required"/>
       <input type="submit" value="Submit" id="submit-button"/>
     </form>
   </div>
 
-  <script>
 
+<script>
 
-$(document).ready(function(){
-  $(".attendee").on("click", function() {
-      $(this).css("background-color", "green");
+  $(document).ready(function(){
+    $(".attendee").on("click", function() {
+        $(this).css("background-color", "green");
+    });
   });
-});
+
 </script>
 
 </body>

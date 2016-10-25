@@ -2,6 +2,7 @@ from flask import Flask
 from flask import render_template
 from flask import request
 import csv
+import time
 
 with open('names.csv') as csvfile:
     readCSV = csv.DictReader(csvfile, delimiter=',')
@@ -21,19 +22,15 @@ def render_main():
     return render_template("main.html", f_names=first_names, l_names=last_names, companies = companies)
 
 @app.route('/signup', methods = ['POST'])
-def render_signup():
-    return render_template("signup_screen.html")
-
-
-# get this function to write to existent excel file so that new person is included on the list
-@app.route('/signup', methods = ['POST'])
 def new_signup():
     form_data = request.form
-    fields = ["first", "second", "third"]
-    with open('new_signups.csv') as csvfile:
-        form_info = open("new_signups.csv","a")
-        form_info.write(form_data['name'] + "," + form_data['email'])
-        form_info = close("new_signups.csv")
+    with open('new_signups.csv','a') as new_signups:
+        fieldnames = ['date','first_name','last_name','company','email','newsletter']
+        writer = csv.DictWriter(new_signups, fieldnames=fieldnames)
+        writer.writerow({'date' : (time.strftime("%d/%m/%Y")) ,'first_name' : form_data['first_name'], 'last_name' : form_data['last_name'], 'company' : form_data['company'], 'email' : form_data['email']})
+    new_signups.close()
+    return render_template("signup_screen.html")
+
 
 if __name__ == '__main__':
     app.run(debug=True)
