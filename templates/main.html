@@ -2,6 +2,8 @@
 <head>
   <title> RegiSTAR </title>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
   <link rel="stylesheet" type="text/css" href="../static/main.css">
 </head>
 <body>
@@ -41,7 +43,7 @@
 <!-- make this correspond to Jquery so when this button is clicked the list of those who attended / did not attended is generated -->
 <!-- This should send out the emails to present and absent  -->
   <div>
-    <button> Submit register for this event</button>
+    <button class="btn btn-default" id = "finalise-regsiter"> Submit register for this event</button>
   </div>
 
 <script>
@@ -62,7 +64,19 @@
         }
       })
       console.log(present_attendees_id)
+
     });
+      $('#finalise-register').click(function(){
+        $.ajax({
+        type: 'POST',
+         url: '/email',
+       success: function(data){
+          alert(data);
+       }
+      });
+      console.log("email sent")
+    });
+
   });
 </script>
 
