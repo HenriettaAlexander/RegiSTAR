@@ -1,6 +1,3 @@
-body{
-  background-color: red;
-}
 
 div .attendee{
   border: solid black 2px;
@@ -15,6 +12,18 @@ p{
 }
 
 button{
-  background: red;
+  background: #DCDCDC;
   border: none:
+}
+
+.jumbotron {
+	text-align: center;
+    padding: 200px 0px 150px 0px;
+	min-height: 600px;
+	background-image: url("https://s-media-cache-ak0.pinimg.com/originals/65/be/af/65beaf5c7577ebeee4abd1ba6fa75b26.jpg");
+	background-size: cover;
+	font-family: 'Seymour+One', cursive;
+	color: black;
+	border-color: black;
+	font-size: 500px;
 }
