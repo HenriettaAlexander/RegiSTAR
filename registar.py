@@ -47,6 +47,14 @@ def new_signup():
 
     return render_template("signup_screen.html")
 
+def send_simple_message():
+    return requests.post(
+        "https://api.mailgun.net/v3/sandboxbe491d938e22405499d4874c69664f8b.mailgun.org/messages",
+        auth=("api", "key-031cab299639eaa5925bfe26361726fe"),
+        data={"from": "Mailgun Sandbox <postmaster@sandboxbe491d938e22405499d4874c69664f8b.mailgun.org>",
+              "to": "Isabella O'Duffy <ioduffy@yahoo.co.uk>",
+              "subject": "Hello Isabella O'Duffy",
+              "text": "Congratulations Isabella O'Duffy, you just sent an email with Mailgun!  You are truly awesome!  You can see a record of this email in your logs: https://mailgun.com/cp/log .  You can send up to 300 emails/day from this sandbox server.  Next, you should add your own domain so you can send 10,000 emails/month for free."})
 
 if __name__ == '__main__':
     app.run(debug=True)
