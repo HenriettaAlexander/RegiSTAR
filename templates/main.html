@@ -61,6 +61,7 @@
       $(".attendee").each(function(){
         if( $(this).hasClass("present") ) {
           present_attendees_id.push( $(this).attr("id") )
+          // HOW TO GET HERE THE FIRST, LAST NAMES AND EMAIL ADDRESS?
         }
       })
       console.log(present_attendees_id)
@@ -74,7 +75,6 @@
           alert(data);
        }
       });
-      console.log("email sent")
     });
 
   });

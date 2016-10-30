@@ -4,6 +4,7 @@ from flask import request
 import requests
 import csv
 import time
+import os #library for uploading/manipulating files
 
 
 
@@ -27,6 +28,9 @@ with open('names.csv') as csvfile:
 # how to check whether the names is already on the list?
 # loop .join the first_name, last_name & comapny and loop through current list to see if it already exist
 app = Flask(__name__)
+
+APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+
 @app.route('/', methods = ['GET'])
 def render_main():
     with open('new_signups.csv','r') as new_signups:
@@ -52,6 +56,7 @@ def new_signup():
     return render_template("signup_screen.html")
 
     # def send_simple_message():
+    # this sends a message to given email whenever 'submit this register' button is clicked
     return requests.post(
         "https://api.mailgun.net/v3/sandbox3e7227e67a8b424891fd4bc2e2126db0.mailgun.org/messages",
         auth=("api", "key-53ed1f7079a97617110a13a0f80b036e"),
@@ -60,17 +65,32 @@ def new_signup():
               "subject": "Hello xxxx",
               "html": "Congratulations xxxxxxx, you just sent an email with Mailgun!  You are truly awesome!  You can see a record of this email in your logs: https://mailgun.com/cp/log .  You can send up to 300 emails/day from this sandbox server.  Next, you should add your own domain so you can send 10,000 emails/month for free."})
 
+@app.route('/admin', methods = ['POST'] )
+def upload():
+    render_template('admin_view.html')
 
 
-@app.route('/email', methods=['POST'])
-def send_simple_message():
-    return requests.post(
-        "https://api.mailgun.net/v3/sandbox3e7227e67a8b424891fd4bc2e2126db0.mailgun.org/messages",
-        auth=("api", "key-53ed1f7079a97617110a13a0f80b036e"),
-        data={"from": "Mailgun Sandbox <postmaster@sandbox3e7227e67a8b424891fd4bc2e2126db0.mailgun.org>",
-              "to": {{ email }},
-              "subject": "Hello {{ person }}",
-              "html": "Congratulations {{ name }}, you just sent an email with Mailgun!  You are truly awesome!  You can see a record of this email in your logs: https://mailgun.com/cp/log .  You can send up to 300 emails/day from this sandbox server.  Next, you should add your own domain so you can send 10,000 emails/month for free."})
+@app.route('/upload')
+def upload():
+    target = os.path.join(APP_ROOT, 'csv/')
+    print target
+
+    for file in requests.files.getlist('file'):
+        print file
+        filename = file.filename
+        destination = '/'.join([target, filename])
+        file.save(destination)
+    return render_template('upload_completed.html')
+
+# @app.route('/email', methods=['POST'])
+# def send_simple_message():
+#     return requests.post(
+#         "https://api.mailgun.net/v3/sandbox3e7227e67a8b424891fd4bc2e2126db0.mailgun.org/messages",
+#         auth=("api", "key-53ed1f7079a97617110a13a0f80b036e"),
+#         data={"from": "Mailgun Sandbox <postmaster@sandbox3e7227e67a8b424891fd4bc2e2126db0.mailgun.org>",
+#               "to": {{ email }},
+#               "subject": "Hello {{ person }}",
+#               "html": "Congratulations {{ name }}, you just sent an email with Mailgun!  You are truly awesome!  You can see a record of this email in your logs: https://mailgun.com/cp/log .  You can send up to 300 emails/day from this sandbox server.  Next, you should add your own domain so you can send 10,000 emails/month for free."})
 
 
 if __name__ == '__main__':
