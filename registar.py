@@ -54,21 +54,36 @@ def new_signup():
         writer = csv.DictWriter(new_signups, fieldnames=fieldnames)
         writer.writerow({'date' : (time.strftime("%d/%m/%Y")) ,'first_name' : form_data['first_name'], 'last_name' : form_data['last_name'], 'company' : form_data['company'], 'email' : form_data['email']})
 
-    return render_template("signup_screen.html")
-
     # def send_simple_message():
     # this sends a message to given email whenever 'submit this register' button is clicked
 
     # X-Mailgun-Recipient-Variables: {email: {"first":name, "id":1}}
     # https://documentation.mailgun.com/user_manual.html#batch-sending
 
-    return requests.post(
+    # TODO: validate response
+    response = requests.post(
         "https://api.mailgun.net/v3/sandbox3e7227e67a8b424891fd4bc2e2126db0.mailgun.org/messages",
         auth=("api", "key-53ed1f7079a97617110a13a0f80b036e"),
         data={"from": "Mailgun Sandbox <postmaster@sandbox3e7227e67a8b424891fd4bc2e2126db0.mailgun.org>",
               "to": email,
               "subject": "Hello %name%",
               "html": "Congratulations %name%, you just sent an email with Mailgun!  You are truly awesome!  You can see a record of this email in your logs: https://mailgun.com/cp/log .  You can send up to 300 emails/day from this sandbox server.  Next, you should add your own domain so you can send 10,000 emails/month for free."})
+
+
+    return render_template("signup_screen.html")
+
+@app.route('/register', methods = ['POST'])
+def generate_register():
+    register_data = request.data
+    # print request.json
+    print register_data
+    import pdb; pdb.set_trace()
+    return "string"
+
+# New route
+# Post request
+# Accept a list of ids
+
 
 # @app.route('/admin', methods = ['POST'] )
 # def upload():

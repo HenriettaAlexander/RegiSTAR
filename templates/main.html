@@ -114,9 +114,14 @@
       <input type="email" id="email" name="email" value="" placeholder="joe@bloggs.com" required="required"/>
     </h3>
     <h3>
+<<<<<<< Updated upstream
     <div class="container">
       <button type="button" class="btn btm-xs" id="myBtn1">Submit</button>
     <h/3>
+=======
+      <button type="button" class="btn btm-xs new_signup_btn" id="myBtn1">Submit</button>
+    </h3>
+>>>>>>> Stashed changes
     </form>
   </div>
 	</div>
@@ -129,8 +134,12 @@
 <!-- This should send out the emails to present and absent  -->
   <div>
   	<h1>
+<<<<<<< Updated upstream
   	<div class="container">
     <button type="button" class="btn btm-xs" id="myBtn1">Submit to register for this event</button>
+=======
+    <button type="button" class="btn btm-xs register_submit_button">Submit to register for this event</button>
+>>>>>>> Stashed changes
   	</h1>
   	</div>
   	<h1>
@@ -146,7 +155,7 @@
         $(this).toggleClass("present");
     });
 
-    $("button").click(function(){
+    $(".register_submit_button").click(function(){
       var present_attendees_id = [];
 
       $(".attendee").each(function(){
@@ -156,6 +165,17 @@
         }
       })
       console.log(present_attendees_id)
+
+      $.ajax({
+        type: 'POST',
+        url: '/register',
+        data: "present_attendees_id",
+        // contentType: "application/json;charset=utf-8",
+        success: function(data){
+          console.log(data);
+        }
+      })
+      // $.post("/register", "hello")
 
     });
       $('#finalise-register').click(function(){
