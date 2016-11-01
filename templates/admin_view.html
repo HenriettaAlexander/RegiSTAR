@@ -18,13 +18,14 @@
 
 <body>
 
-  <form id = "upload-form" action="{{url_for('upload')}}" enctype="multipart/form-data" method="post">
+  <form id = "upload-form" action="" enctype="multipart/form-data" method="post">
 
-  <p> Please specify a file, or a set of files:<br>
-    <input type="file" name="file" accept = '.csv' size="40">
-  </p>
+  <h4> Title: </h4>
+  <h4> Choose the file to preload guest list<br>
+    <input type="file" name="upload-file" accept = '.csv' size="40">
+  </h4>
   <div>
-    <input type="submit" value="Send">
+    <input type="submit" value="Submit file">
   </div>
 </form>
 
