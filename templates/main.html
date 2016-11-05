@@ -56,112 +56,119 @@
           </div>
         </div>
 
-<div class = container>
-        <h3>
-          {% for i in f_names %}
+        <div class = container>
           <h3>
-          </h3>
-          <button type="button" class="btn btm-xs" id="myBtn1">
-            <div class= "attendee" id="attendee-{{loop.index0}}">
-              <h4> {{f_names[loop.index0]}} {{l_names[loop.index0]}} </h4>
-              <p> {{companies[loop.index0]}} </p> </button>
-            </div>
-            {% endfor %}
-          </h3>
-          <h3>
-          </h3>
-        </div>
-
-
-        <!-- The form needs to be seprated into first name and last name (optional company?) -->
-        <div class="container">
-          <div id="signup-form">
+            {% for i in f_names %}
+            <h3>
+            </h3>
+            <button type="button" class="btn btm-xs" id="myBtn1">
+              <div class= "attendee" id="attendee-{{loop.index0}}">
+                <h4> {{f_names[loop.index0]}} {{l_names[loop.index0]}} </h4>
+                <p> {{companies[loop.index0]}} </p> </button>
+              </div>
+              {% endfor %}
+            </h3>
+            <h3>
+            </h3>
           </div>
-          <div class="panel panel-default">
-            <div class="panel-heading" id="categorytwo">
-              <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
-                <h4 class="panel-title" id="cateogorytwo">
-                  Not on the list? Add your name below:
-                  <span class ="arrow-down pull-right glyphicon glyphicon-chevron-up">
-                  </span>
-                </h4>
-              </a>
+
+
+          <!-- The form needs to be seprated into first name and last name (optional company?) -->
+          <div class="container">
+            <div id="signup-form">
             </div>
-            <form method="post" action="/signup">
-              <h3>
-                <!-- <div class="container"> -->
+            <div class="panel panel-default">
+              <div class="panel-heading" id="categorytwo">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                  <h4 class="panel-title" id="cateogorytwo">
+                    Not on the list? Add your name below:
+                    <span class ="arrow-down pull-right glyphicon glyphicon-chevron-up">
+                    </span>
+                  </h4>
+                </a>
+              </div>
+              <form method="post" action="/signup">
+                <h4>
+                  <!-- <div class="container"> -->
                   <label style="padding-right:66px;" for="first_name">First Name: </label>
                   <input type="text" id="first_name" name="first_name" value="" placeholder="First name" required="required" autofocus="autofocus"/>
-                </h3>
-                <h3>
+                </h4>
+                <h4>
                   <!-- <div class="container"> -->
-                    <label style="padding-right:67px;" for="last_name">Last Name: </label>
-                    <input type="text" id="last_name" name="last_name" value="" placeholder="Last name" required="required" autofocus="autofocus"/>
-                  </h3>
-                  <h3>
-                    <!-- <div class="container"> -->
-                      <label style="padding-right:80px;" for="company">Company: </label>
-                      <input type="text" id="company" name="company" value="" placeholder="Company" required="required" autofocus="autofocus"/>
-                    </h3>
-                    <h3>
-                      <!-- <div class="container"> -->
-                        <label style="padding-right:25px;" for="email">Email Address: <padding: 200px;> </label>
-                        <input type="email" id="email" name="email" value="" placeholder="joe@bloggs.com" required="required autofocus="autofocus""/>
-                      </h3>
-                      <h3>
-                        <button type="submit" class="btn btn-xs new_signup_btn" id="myBtn1">Submit</button>
-                      </h3>
-                    </form>
+                  <label style="padding-right:67px;" for="last_name">Last Name: </label>
+                  <input type="text" id="last_name" name="last_name" value="" placeholder="Last name" required="required" autofocus="autofocus"/>
+                </h4>
+                <h4>
+                  <!-- <div class="container"> -->
+                  <label style="padding-right:80px;" for="company">Company: </label>
+                  <input type="text" id="company" name="company" value="" placeholder="Company" required="required" autofocus="autofocus"/>
+                </h4>
+                <h4>
+                  <!-- <div class="container"> -->
+                  <label style="padding-right:25px;" for="email">Email Address: <padding: 200px;> </label>
+                  <input type="email" id="email" name="email" value="" placeholder="joe@bloggs.com" required="required" autofocus="autofocus"/>
+                </h4>
+                <h4>
+                <input type="checkbox" id="newsletter" name="newsletter" value="yes" checked="1" autofocus="autofocus"> </input>
+                <label> Tick this box if you'd like to receive Registar newsletter </h4>
+                  <h5> <i>We will never pass you details to any other companies</i></h5>
+                </label>
 
-        <!-- make this correspond to Jquery so when this button is clicked the list of those who attended / did not attended is generated -->
-        <!-- This should send out the emails to present and absent  -->
-        <div>
-          <h1>
+              </h4>
+                <h4>
+                  <button type="submit" class="btn btn-xs new_signup_btn" id="myBtn1">Submit</button>
+                </h4>
+              </form>
 
-            <div class="container">
+              <!-- make this correspond to Jquery so when this button is clicked the list of those who attended / did not attended is generated -->
+              <!-- This should send out the emails to present and absent  -->
+              <div>
+              </div>
+            </div>
+            <h1>
 
-              <button type="button" class="btn btm-xs register_submit_button">Submit to register for this event</button>
+              <div class="container">
 
+                <button type="button" class="btn btm-xs register_submit_button">Submit to register for this event</button>
+
+              </h1>
+            </div>
+            <h1>
             </h1>
           </div>
-          <h1>
-          </h1>
-        </div>
-      </div>
-    </div>
-      <script>
-      // use Jquery id to post
+          <script>
+          // use Jquery id to post
 
-      $(document).ready(function(){
+          $(document).ready(function(){
 
-        $(".attendee").on("click", function() {
-          $(this).toggleClass("present");
-        });
+            $(".attendee").on("click", function() {
+              $(this).toggleClass("present");
+            });
 
-        $(".register_submit_button").click(function(){
-          confirm("Are you sure you'd like to create the register from this event? Once the register is created, you will be able to access it in admin area.")
-          var present_attendees_id = [];
+            $(".register_submit_button").click(function(){
+              confirm("Are you sure you'd like to create the register from this event? Once the register is created, you will be able to access it in admin area.")
+              var present_attendees_id = [];
 
-          $(".attendee").each(function(){
-            if( $(this).hasClass("present") ) {
-              present_attendees_id.push( $(this).attr("id") )
-              // HOW TO GET HERE THE FIRST, LAST NAMES AND EMAIL ADDRESS?
-            }
-          })
-          console.log(present_attendees_id)
+              $(".attendee").each(function(){
+                if( $(this).hasClass("present") ) {
+                  present_attendees_id.push( $(this).attr("id") )
+                  // HOW TO GET HERE THE FIRST, LAST NAMES AND EMAIL ADDRESS?
+                }
+              })
+              console.log(present_attendees_id)
 
-          $.ajax({
-            type: 'POST',
-            url: '/register',
-            data: "present_attendees_id",
-            // contentType: "application/json;charset=utf-8",
-            success: function(data){
-              console.log(data);
-            }
-          })
-        });
-      });
+              $.ajax({
+                type: 'POST',
+                url: '/register',
+                data: "present_attendees_id",
+                // contentType: "application/json;charset=utf-8",
+                success: function(data){
+                  console.log(data);
+                }
+              })
+            });
+          });
 
-      </script>
+          </script>
 
-    </body>
+        </body>
