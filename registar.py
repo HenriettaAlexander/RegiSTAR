@@ -71,14 +71,6 @@ preload_names('names.csv')
 
 @app.route('/event', methods = ['GET'])
 def render_main():
-    # with open('new_signups.csv','r') as new_signups:
-    #     find_new_attendees = csv.DictReader(new_signups, delimiter=',')
-    #     for row in find_new_attendees:
-    #         if row['date'] == time.strftime("%d/%m/%Y"):
-    #             first_names.append(row['first_name'])
-    #             last_names.append(row['last_name'])
-    #             companies.append(row['company'])
-
     with open('new_signups.csv','r') as new_signups:
         find_new_attendees = csv.DictReader(new_signups, delimiter=',')
         for row in find_new_attendees:
@@ -96,7 +88,7 @@ def render_main():
                     companies.append(row['company'])
 
 
-    return render_template("main.html", f_names=first_names, l_names=last_names, companies = companies, date = date)
+    return render_template("main.html", event= "Registar Launch", venue = "Level 39, 1 Canada Square", f_names=first_names, l_names=last_names, companies = companies, date = date)
 
 
 
@@ -131,9 +123,15 @@ def new_signup():
 #     import pdb; pdb.set_trace()
 #     return "string"
 #
+
 @app.route('/')
-def signin():
+def homepage():
     return render_template("homepage.html")
+
+
+@app.route('/upload_completed')
+def signin():
+    return render_template("upload_completed.html")
 
 
 def allowed_file(filename):
@@ -145,16 +143,11 @@ def allowed_file(filename):
 def upload():
     print 0
     if request.method == 'POST':
-        # check if the post request has the file part
-        print 1
-        print request.files
         if 'upload-file' not in request.files:
             flash('No file part')
             return redirect(request.url)
         file = request.files['upload-file']
-        # if user does not select file, browser also
-        # submit a empty part without filename
-        print 2
+
         if file.filename == '':
             flash('No selected file')
             return redirect(request.url)
@@ -163,7 +156,6 @@ def upload():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             print filename
-            # file.save(os.path.join('/tmp', filename))
             file.save(os.path.join(app.root_path,'registers', secure_filename(request.form['event_name']))+'.csv')
 
             return redirect(url_for('signin'))

@@ -20,18 +20,13 @@
 
   <form id = "upload-form" action="" enctype="multipart/form-data" method="post">
 
-  <h4> Title: </h4>
-  <h4> Choose a name for the event<br>
-
-  <input name='event_name' size="40">
-  <h4> Choose a date for the event<br>
-
-  <input name='date' type='date' size="20">
-
-
-  <h4> Choose the file to preload guest list<br>
+  <label> Event name: </label>
+  <input name='event_name' size="40"><br><br>
+  <label> Date</label>
+  <input name='date' type='date' size="20"><br><br>
+  <h5> Choose the file to preload guest list:<br><br>
     <input type="file" name="upload-file" accept = '.csv' size="40">
-  </h4>
+  </h5>
   <div>
     <input type="submit" value="Submit file">
   </div>
