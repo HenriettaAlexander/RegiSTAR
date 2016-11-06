@@ -55,6 +55,7 @@ first_names = []
 last_names = []
 companies = []
 date = time.strftime("%d/%m/%Y")
+today_signed = []
 
 
 def preload_names(csv_file_name):
@@ -70,22 +71,30 @@ preload_names('names.csv')
 
 @app.route('/event', methods = ['GET'])
 def render_main():
-    not_on_the_list = []
+    # with open('new_signups.csv','r') as new_signups:
+    #     find_new_attendees = csv.DictReader(new_signups, delimiter=',')
+    #     for row in find_new_attendees:
+    #         if row['date'] == time.strftime("%d/%m/%Y"):
+    #             first_names.append(row['first_name'])
+    #             last_names.append(row['last_name'])
+    #             companies.append(row['company'])
+
     with open('new_signups.csv','r') as new_signups:
         find_new_attendees = csv.DictReader(new_signups, delimiter=',')
         for row in find_new_attendees:
             if row['date'] == time.strftime("%d/%m/%Y"):
                 for i in range(len(first_names)):
-                    if "".join([row['first_name'],row['last_name'],row['company']]) != "".join([first_names[i],last_names[i],companies[i]]):
-                        not_on_the_list.append('y')
-                if len(not_on_the_list) == len(first_names):
-                    with open('new_signups.csv','r') as new_signups:
-                        find_new_attendees = csv.DictReader(new_signups, delimiter=',')
-                        for row in find_new_attendees:
-                            first_names.append(row['first_name'])
-                            last_names.append(row['last_name'])
-                            companies.append(row['company'])
-                print len(not_on_the_list), len(first_names), len(not_on_the_list) == len(first_names)
+                    if "".join([row['first_name'],row['last_name']]) == "".join([first_names[i],last_names[i]]):
+                        today_signed.append("n")
+                    else:
+                        today_signed.append("y")
+                if "n" in today_signed:
+                    pass
+                else:
+                    first_names.append(row['first_name'])
+                    last_names.append(row['last_name'])
+                    companies.append(row['company'])
+
 
     return render_template("main.html", f_names=first_names, l_names=last_names, companies = companies, date = date)
 
@@ -98,17 +107,12 @@ def new_signup():
         fieldnames = ['date','first_name','last_name','company','email','newsletter']
         writer = csv.DictWriter(new_signups, fieldnames=fieldnames)
         writer.writerow({'date' : (time.strftime("%d/%m/%Y")) ,'first_name' : form_data['first_name'], 'last_name' : form_data['last_name'], 'company' : form_data['company'], 'email' : form_data['email'], 'newsletter' : form_data['newsletter']})
+        first_names.append(form_data['first_name'])
+        last_names.append(form_data['last_name'])
+        companies.append(form_data['company'])
 
-        # print len(not_on_the_list), len(first_names), len(not_on_the_list) == len(first_names)
-        # if len(not_on_the_list) == len(first_names):
-        #     with open('new_signups.csv','r') as new_signups:
-        #         find_new_attendees = csv.DictReader(new_signups, delimiter=',')
-        #         for row in find_new_attendees:
-        #             first_names.append(row['first_name'])
-        #             last_names.append(row['last_name'])
-        #             companies.append(row['company'])
 
-        # TODO: validate response
+
         requests.post(
             "https://api.mailgun.net/v3/sandbox3e7227e67a8b424891fd4bc2e2126db0.mailgun.org/messages",
             auth=("api", "key-53ed1f7079a97617110a13a0f80b036e"),
