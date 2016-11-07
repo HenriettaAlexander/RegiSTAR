@@ -7,6 +7,7 @@ import csv
 import time
 import os #library for uploading/manipulating files
 import sys
+# import wx
 
 app = Flask(__name__)
 
@@ -87,9 +88,7 @@ def render_main():
                     last_names.append(row['last_name'])
                     companies.append(row['company'])
 
-
-    return render_template("main.html", event= "Registar Launch", venue = "Level 39, 1 Canada Square", f_names=first_names, l_names=last_names, companies = companies, date = date)
-
+    return render_template("main.html", event="Registar Launch", venue ="Level 39, 1 Canada Square", f_names=first_names, l_names=last_names, companies = companies, date = date)
 
 
 @app.route('/signup', methods = ['POST'])
@@ -102,8 +101,6 @@ def new_signup():
         first_names.append(form_data['first_name'])
         last_names.append(form_data['last_name'])
         companies.append(form_data['company'])
-
-
 
         requests.post(
             "https://api.mailgun.net/v3/sandbox3e7227e67a8b424891fd4bc2e2126db0.mailgun.org/messages",
@@ -140,27 +137,40 @@ def allowed_file(filename):
 
 
 @app.route('/admin', methods = ['GET','POST'] )
+# def check_password(parent=None, message='', default_value=''):
+#     dialog_box = wx.TextEntryDialog(parent, message, defaultValue=default_value)
+#     dialog_box.ShowModal()
+#     password = dialog_box.GetValue()
+#     dialog_box.Destroy()
+#     return result
+
+
+
 def upload():
-    print 0
-    if request.method == 'POST':
-        if 'upload-file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
-        file = request.files['upload-file']
-
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
-        print file
-        print allowed_file(file.filename)
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            print filename
-            file.save(os.path.join(app.root_path,'registers', secure_filename(request.form['event_name']))+'.csv')
-
-            return redirect(url_for('signin'))
+    password = raw_input("Password")
+    if password != "cfg":
+        alert = "Your password isn't correct. You do not have permission to view this site."
+        return render_template('homepage.html')
     else:
-        return render_template('admin_view.html')
+        if request.method == 'POST':
+            if 'upload-file' not in request.files:
+                flash('No file part')
+                return redirect(request.url)
+            file = request.files['upload-file']
+
+            if file.filename == '':
+                flash('No selected file')
+                return redirect(request.url)
+            print file
+            print allowed_file(file.filename)
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                print filename
+                file.save(os.path.join(app.root_path,'registers', secure_filename(request.form['event_name']))+'.csv')
+
+                return redirect(url_for('signin'))
+        else:
+            return render_template('admin_view.html')
 
 
 if __name__ == '__main__':

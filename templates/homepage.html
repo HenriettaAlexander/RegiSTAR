@@ -28,7 +28,7 @@
       </div>
 
       <ul class="nav navbar-nav navbar-right">
-        <a class="btn btn-default" href="/admin"><li> Log in </li></a>
+        <a class="btn btn-default" id ="login-button" href="/admin"><li> Log in </li></a>
 
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Menu<span class="caret"></span></a>
@@ -314,6 +314,23 @@ $(document).click(function(e) {
 });
 
 });
+
+$(document).ready(function()){
+  $('#login-button').click(function(){
+    var username = prompt("Username:")
+    var password = prompt("Password:")
+
+    if (password == 'cfg'){
+      return "You've logged in successfully"
+    } else {
+      return "Your password isn't correct. Please try again"
+    }
+    }
+  })
+}
+
+
+
 </script>
 
 </body>
