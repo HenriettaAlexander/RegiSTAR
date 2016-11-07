@@ -63,7 +63,7 @@
             <h3>
             </h3>
             <button type="button" class="btn btm-xs" id="myBtn1">
-              <div class= "attendee" id="attendee-{{loop.index0}}">
+              <div class= "attendee" id="{{f_names[loop.index0]}}-{{l_names[loop.index0]}}-{{companies[loop.index0]}}">
                 <h4> {{f_names[loop.index0]}} {{l_names[loop.index0]}} </h4>
                 <p> {{companies[loop.index0]}} </p> </button>
               </div>
@@ -153,6 +153,8 @@
               $(".attendee").each(function(){
                 if( $(this).hasClass("present") ) {
                   present_attendees_id.push( $(this).attr("id") )
+
+
                   // HOW TO GET HERE THE FIRST, LAST NAMES AND EMAIL ADDRESS?
                 }
               })
