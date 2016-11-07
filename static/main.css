@@ -1,22 +1,17 @@
 body{
-  margin: 20px;
+  margin: 100px;
 }
 
 div .attendee{
-  border: solid black 2px;
+  width: 100px;
+  border: solid black 3px;
+  text-align: center;
+  font-family: 'Seymour+One', cursive;
 }
 
 .present{
   background-color: green;
-}
-
-p{
-  color: white;
-}
-
-button{
-  background: #DCDCDC;
-  border: none:
+  color: black;
 }
 
 .jumbotron {
