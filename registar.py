@@ -11,46 +11,6 @@ import sys
 
 app = Flask(__name__)
 
-# login_manager = LoginManager()
-# login_manager.init_app(app)
-#
-#
-# @login_manager.user_loader
-# def load_user(user_id):
-#     return User.get(user_id)
-#
-# class RegistrationForm(Form):
-#     username     = StringField('Username', [validators.Length(min=4, max=25)])
-#     email        = StringField('Email Address', [validators.Length(min=6, max=35)])
-#     accept_rules = BooleanField('I accept the site rules', [validators.InputRequired()])
-#
-# @app.route('/login', methods=['GET', 'POST'])
-# def login(request):
-#     form = RegistrationForm(request.POST)
-#     if request.method == 'POST' and form.validate():
-#         user = User()
-#         user.username = form.username.data
-#         user.email = form.email.data
-#         user.save()
-#         redirect('logged-in')
-#     return render_response('logged-in', form=form)
-#
-#     form = LoginForm()
-#     if form.validate_on_submit():
-#         # Login and validate the user.
-#         # user should be an instance of your `User` class
-#         login_user(user)
-#
-#         flask.flash('Logged in successfully.')
-#
-#         next = flask.request.args.get('next')
-#         # next_is_valid should check if the user has valid
-#         # permission to access the `next` url
-#         if not next_is_valid(next):
-#             return flask.abort(400)
-#
-#         return flask.redirect(next or flask.url_for('index'))
-#     return flask.render_template('login.html', form=form)
 
 first_names = []
 last_names = []
@@ -125,6 +85,12 @@ def new_signup():
 def homepage():
     return render_template("homepage.html")
 
+# @app.route('/register', methods = ["POST"])
+# def export_register():
+#     # import pdb
+#     # pdb.set_trace()
+#     print request.form
+#     return request.form['attendees']
 
 @app.route('/upload_completed')
 def signin():

@@ -3,15 +3,37 @@ body{
 }
 
 div .attendee{
-  width: 100px;
-  border: solid black 3px;
-  text-align: center;
-  font-family: 'Seymour+One', cursive;
+  /*width: 100px;*/
+  border: solid black 2px;
+  border-radius: 10px;
+  font-family: 'Raleway';
 }
 
-.present{
-  background-color: green;
+div .present{
+  background-color: #d1d1e0
+;
   color: black;
+}
+
+.attendee p{
+  font-size: 16px;
+}
+
+.attendee h4{
+  font-weight: bolder;
+}
+
+.present p{
+  color: #AAADAD
+}
+
+.present h4{
+  color: #AAADAD
+}
+
+
+.attendee{
+  background-color: #ffffb3
 }
 
 .jumbotron {
