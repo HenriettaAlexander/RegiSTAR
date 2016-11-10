@@ -11,47 +11,76 @@ import sys
 
 app = Flask(__name__)
 
+people = []
 
-first_names = []
-last_names = []
-companies = []
+# first_names = []
+# last_names = []
+# companies = []
 date = time.strftime("%d/%m/%Y")
 today_signed = []
 
 
 def preload_names(csv_file_name):
+    global people
+    # global first_names
+    # global last_names
+    # global companies
+    # first_names = []
+    # last_names = []
+    # companies = []
+    people = []
     with open(csv_file_name) as csvfile:
         readCSV = csv.DictReader(csvfile, delimiter=',')
         for row in readCSV:
-            first_names.append(row['first_name'])
-            last_names.append(row['last_name'])
-            companies.append(row['company'])
+            people.append((row['first_name'], row['last_name'], row['company']))
+            # first_names.append(row['first_name'])
+            # last_names.append(row['last_name'])
+            # companies.append(row['company'])
 
-preload_names('names.csv')
+def get_first_names():
+    res = []
+    for tup in people:
+        res.append(tup[0])
+    return res
+
+def get_last_names():
+    res = []
+    for tup in people:
+        res.append(tup[1])
+    return res
+
+def get_companies():
+    res = []
+    for tup in people:
+        res.append(tup[2])
+    return res
+
 
 
 @app.route('/event', methods = ['GET'])
 def render_main():
+    preload_names('registers/names.csv')
+
+    first_names = get_first_names()
+    last_names = get_last_names()
+    companies = get_companies()
+
     with open('new_signups.csv','r') as new_signups:
         find_new_attendees = csv.DictReader(new_signups, delimiter=',')
         for row in find_new_attendees:
             if row['date'] == time.strftime("%d/%m/%Y"):
-                for i in range(len(first_names)):
-                    if "".join([row['first_name'],row['last_name']]) == "".join([first_names[i],last_names[i]]):
-                        today_signed.append("n")
-                    else:
-                        today_signed.append("y")
-                if "n" in today_signed:
-                    pass
-                else:
-                    first_names.append(row['first_name'])
-                    last_names.append(row['last_name'])
-                    companies.append(row['company'])
+                if not (row['first_name'], row['last_name'], row['company']) in people:
+                    people.append((row['first_name'], row['last_name'], row['company']))
 
+
+
+    # return render_template("main.html", event="Registar Launch", venue ="Level 39, 1 Canada Square", f_names=first_names, l_names=last_names, companies = companies, date = date)
     return render_template("main.html", event="Registar Launch", venue ="Level 39, 1 Canada Square", f_names=first_names, l_names=last_names, companies = companies, date = date)
 
 
 @app.route('/signup', methods = ['POST'])
+
+
 def new_signup():
     form_data = request.form
     with open('new_signups.csv','a') as new_signups:
@@ -102,7 +131,6 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1] == 'csv'
 
 
-@app.route('/admin', methods = ['GET','POST'] )
 # def check_password(parent=None, message='', default_value=''):
 #     dialog_box = wx.TextEntryDialog(parent, message, defaultValue=default_value)
 #     dialog_box.ShowModal()
@@ -110,33 +138,27 @@ def allowed_file(filename):
 #     dialog_box.Destroy()
 #     return result
 
+    # password = raw_input("Password")
+    # if password != "cfg":
+    #     alert = "Your password isn't correct. You do not have permission to view this site."
+    #     return render_template('homepage.html')
+@app.route('/admin', methods = ['GET'] )
+def admin_view():
+    return render_template('admin_view.html')
 
-
+@app.route('/admin', methods = ['POST'] )
 def upload():
-    password = raw_input("Password")
-    if password != "cfg":
-        alert = "Your password isn't correct. You do not have permission to view this site."
-        return render_template('homepage.html')
-    else:
-        if request.method == 'POST':
-            if 'upload-file' not in request.files:
-                flash('No file part')
-                return redirect(request.url)
-            file = request.files['upload-file']
+    ''' this function handles uploading a file from csv into registers folder '''
+    if request.method == 'POST':
+        file = request.files['upload-file']
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file:
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.root_path,'registers', secure_filename('names.csv')))
+            return render_template('upload_completed.html')
 
-            if file.filename == '':
-                flash('No selected file')
-                return redirect(request.url)
-            print file
-            print allowed_file(file.filename)
-            if file and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                print filename
-                file.save(os.path.join(app.root_path,'registers', secure_filename(request.form['event_name']))+'.csv')
-
-                return redirect(url_for('signin'))
-        else:
-            return render_template('admin_view.html')
 
 
 if __name__ == '__main__':
