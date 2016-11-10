@@ -7,6 +7,8 @@ import csv
 import time
 import os #library for uploading/manipulating files
 import sys
+import shutil
+
 # import wx
 
 app = Flask(__name__)
@@ -33,9 +35,7 @@ def preload_names(csv_file_name):
         readCSV = csv.DictReader(csvfile, delimiter=',')
         for row in readCSV:
             people.append((row['first_name'], row['last_name'], row['company']))
-            # first_names.append(row['first_name'])
-            # last_names.append(row['last_name'])
-            # companies.append(row['company'])
+
 
 def get_first_names():
     res = []
@@ -59,7 +59,13 @@ def get_companies():
 
 @app.route('/event', methods = ['GET'])
 def render_main():
-    preload_names('registers/names.csv')
+    preload_names('names.csv')
+
+    with open('new_signups.csv','r') as new_signups:
+        find_new_attendees = csv.DictReader(new_signups, delimiter=',')
+        for row in find_new_attendees:
+            if row['date'] == time.strftime("%d/%m/%Y"):
+                people.append((row['first_name'], row['last_name'], row['company']))
 
     first_names = get_first_names()
     last_names = get_last_names()
@@ -74,7 +80,6 @@ def render_main():
 
 
 
-    # return render_template("main.html", event="Registar Launch", venue ="Level 39, 1 Canada Square", f_names=first_names, l_names=last_names, companies = companies, date = date)
     return render_template("main.html", event="Registar Launch", venue ="Level 39, 1 Canada Square", f_names=first_names, l_names=last_names, companies = companies, date = date)
 
 
@@ -87,9 +92,10 @@ def new_signup():
         fieldnames = ['date','first_name','last_name','company','email','newsletter']
         writer = csv.DictWriter(new_signups, fieldnames=fieldnames)
         writer.writerow({'date' : (time.strftime("%d/%m/%Y")) ,'first_name' : form_data['first_name'], 'last_name' : form_data['last_name'], 'company' : form_data['company'], 'email' : form_data['email'], 'newsletter' : form_data['newsletter']})
-        first_names.append(form_data['first_name'])
-        last_names.append(form_data['last_name'])
-        companies.append(form_data['company'])
+        people.append(['first_name','last_name','company'])
+
+        print people
+
 
         requests.post(
             "https://api.mailgun.net/v3/sandbox3e7227e67a8b424891fd4bc2e2126db0.mailgun.org/messages",
@@ -101,25 +107,11 @@ def new_signup():
 
     return render_template("signup_screen.html")
 
-# @app.route('/register', methods = ['POST'])
-# def generate_register():
-#     register_data = request.data
-#     # print request.json
-#     print register_data
-#     import pdb; pdb.set_trace()
-#     return "string"
-#
 
 @app.route('/')
 def homepage():
     return render_template("homepage.html")
 
-# @app.route('/register', methods = ["POST"])
-# def export_register():
-#     # import pdb
-#     # pdb.set_trace()
-#     print request.form
-#     return request.form['attendees']
 
 @app.route('/upload_completed')
 def signin():
@@ -131,18 +123,7 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1] == 'csv'
 
 
-# def check_password(parent=None, message='', default_value=''):
-#     dialog_box = wx.TextEntryDialog(parent, message, defaultValue=default_value)
-#     dialog_box.ShowModal()
-#     password = dialog_box.GetValue()
-#     dialog_box.Destroy()
-#     return result
-
-    # password = raw_input("Password")
-    # if password != "cfg":
-    #     alert = "Your password isn't correct. You do not have permission to view this site."
-    #     return render_template('homepage.html')
-@app.route('/admin', methods = ['GET'] )
+@app.route('/admin', methods = ['GET'])
 def admin_view():
     return render_template('admin_view.html')
 
@@ -156,7 +137,8 @@ def upload():
             return redirect(request.url)
         if file:
             filename = secure_filename(file.filename)
-            file.save(os.path.join(app.root_path,'registers', secure_filename('names.csv')))
+            file.save(os.path.join(app.root_path,'registers', secure_filename(request.form['date']+"-"+request.form['event_name'])+'.csv'))
+            # shutil.copy('registers/'request.form['date']+"-"+request.form['event_name'])+'.csv', 'registers')
             return render_template('upload_completed.html')
 
 
