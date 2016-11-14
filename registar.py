@@ -7,46 +7,63 @@ import csv
 import time
 import os #library for uploading/manipulating files
 import sys
-# import wx
+import shutil
+
 
 app = Flask(__name__)
 
-
-first_names = []
-last_names = []
-companies = []
+people = []
 date = time.strftime("%d/%m/%Y")
-today_signed = []
-
 
 def preload_names(csv_file_name):
+    global people
+    people = []
     with open(csv_file_name) as csvfile:
         readCSV = csv.DictReader(csvfile, delimiter=',')
         for row in readCSV:
-            first_names.append(row['first_name'])
-            last_names.append(row['last_name'])
-            companies.append(row['company'])
+            people.append((row['first_name'], row['last_name'], row['company']))
 
-preload_names('names.csv')
+
+def get_first_names():
+    res = []
+    for tup in people:
+        res.append(tup[0])
+    return res
+
+def get_last_names():
+    res = []
+    for tup in people:
+        res.append(tup[1])
+    return res
+
+def get_companies():
+    res = []
+    for tup in people:
+        res.append(tup[2])
+    return res
+
 
 
 @app.route('/event', methods = ['GET'])
 def render_main():
+    preload_names('names.csv')
+
     with open('new_signups.csv','r') as new_signups:
         find_new_attendees = csv.DictReader(new_signups, delimiter=',')
         for row in find_new_attendees:
             if row['date'] == time.strftime("%d/%m/%Y"):
-                for i in range(len(first_names)):
-                    if "".join([row['first_name'],row['last_name']]) == "".join([first_names[i],last_names[i]]):
-                        today_signed.append("n")
-                    else:
-                        today_signed.append("y")
-                if "n" in today_signed:
-                    pass
-                else:
-                    first_names.append(row['first_name'])
-                    last_names.append(row['last_name'])
-                    companies.append(row['company'])
+                people.append((row['first_name'], row['last_name'], row['company']))
+
+    first_names = get_first_names()
+    last_names = get_last_names()
+    companies = get_companies()
+
+    with open('new_signups.csv','r') as new_signups:
+        find_new_attendees = csv.DictReader(new_signups, delimiter=',')
+        for row in find_new_attendees:
+            if row['date'] == time.strftime("%d/%m/%Y"):
+                if not (row['first_name'], row['last_name'], row['company']) in people:
+                    people.append((row['first_name'], row['last_name'], row['company']))
 
     return render_template("main.html", event="Registar Launch", venue ="Level 39, 1 Canada Square", f_names=first_names, l_names=last_names, companies = companies, date = date)
 
@@ -58,9 +75,7 @@ def new_signup():
         fieldnames = ['date','first_name','last_name','company','email','newsletter']
         writer = csv.DictWriter(new_signups, fieldnames=fieldnames)
         writer.writerow({'date' : (time.strftime("%d/%m/%Y")) ,'first_name' : form_data['first_name'], 'last_name' : form_data['last_name'], 'company' : form_data['company'], 'email' : form_data['email'], 'newsletter' : form_data['newsletter']})
-        first_names.append(form_data['first_name'])
-        last_names.append(form_data['last_name'])
-        companies.append(form_data['company'])
+        people.append(['first_name','last_name','company'])
 
         requests.post(
             "https://api.mailgun.net/v3/sandbox3e7227e67a8b424891fd4bc2e2126db0.mailgun.org/messages",
@@ -72,25 +87,11 @@ def new_signup():
 
     return render_template("signup_screen.html")
 
-# @app.route('/register', methods = ['POST'])
-# def generate_register():
-#     register_data = request.data
-#     # print request.json
-#     print register_data
-#     import pdb; pdb.set_trace()
-#     return "string"
-#
 
 @app.route('/')
 def homepage():
     return render_template("homepage.html")
 
-# @app.route('/register', methods = ["POST"])
-# def export_register():
-#     # import pdb
-#     # pdb.set_trace()
-#     print request.form
-#     return request.form['attendees']
 
 @app.route('/upload_completed')
 def signin():
@@ -102,42 +103,27 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1] == 'csv'
 
 
-@app.route('/admin', methods = ['GET','POST'] )
-# def check_password(parent=None, message='', default_value=''):
-#     dialog_box = wx.TextEntryDialog(parent, message, defaultValue=default_value)
-#     dialog_box.ShowModal()
-#     password = dialog_box.GetValue()
-#     dialog_box.Destroy()
-#     return result
+@app.route('/admin', methods = ['GET'])
+def admin_view():
+    return render_template('admin_view.html')
 
-
-
+@app.route('/admin', methods = ['POST'])
 def upload():
-    password = raw_input("Password")
-    if password != "cfg":
-        alert = "Your password isn't correct. You do not have permission to view this site."
-        return render_template('homepage.html')
-    else:
-        if request.method == 'POST':
-            if 'upload-file' not in request.files:
-                flash('No file part')
-                return redirect(request.url)
-            file = request.files['upload-file']
+    ''' this function handles uploading a file from csv into registers folder '''
+    if request.method == 'POST':
+        file = request.files['upload-file']
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file:
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.root_path,'registers', secure_filename(request.form['date']+"-"+request.form['event_name'])+'.csv'))
+            return render_template('upload_completed.html')
 
-            if file.filename == '':
-                flash('No selected file')
-                return redirect(request.url)
-            print file
-            print allowed_file(file.filename)
-            if file and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                print filename
-                file.save(os.path.join(app.root_path,'registers', secure_filename(request.form['event_name']))+'.csv')
 
-                return redirect(url_for('signin'))
-        else:
-            return render_template('admin_view.html')
-
+@app.route('/register', methods = ["GET", "POST"])
+def register():
+    return 'present_attendees_id'
 
 if __name__ == '__main__':
     app.run(debug=True)
