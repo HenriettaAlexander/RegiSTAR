@@ -9,27 +9,14 @@ import os #library for uploading/manipulating files
 import sys
 import shutil
 
-# import wx
 
 app = Flask(__name__)
 
 people = []
-
-# first_names = []
-# last_names = []
-# companies = []
 date = time.strftime("%d/%m/%Y")
-today_signed = []
-
 
 def preload_names(csv_file_name):
     global people
-    # global first_names
-    # global last_names
-    # global companies
-    # first_names = []
-    # last_names = []
-    # companies = []
     people = []
     with open(csv_file_name) as csvfile:
         readCSV = csv.DictReader(csvfile, delimiter=',')
@@ -78,14 +65,10 @@ def render_main():
                 if not (row['first_name'], row['last_name'], row['company']) in people:
                     people.append((row['first_name'], row['last_name'], row['company']))
 
-
-
     return render_template("main.html", event="Registar Launch", venue ="Level 39, 1 Canada Square", f_names=first_names, l_names=last_names, companies = companies, date = date)
 
 
 @app.route('/signup', methods = ['POST'])
-
-
 def new_signup():
     form_data = request.form
     with open('new_signups.csv','a') as new_signups:
@@ -93,9 +76,6 @@ def new_signup():
         writer = csv.DictWriter(new_signups, fieldnames=fieldnames)
         writer.writerow({'date' : (time.strftime("%d/%m/%Y")) ,'first_name' : form_data['first_name'], 'last_name' : form_data['last_name'], 'company' : form_data['company'], 'email' : form_data['email'], 'newsletter' : form_data['newsletter']})
         people.append(['first_name','last_name','company'])
-
-        print people
-
 
         requests.post(
             "https://api.mailgun.net/v3/sandbox3e7227e67a8b424891fd4bc2e2126db0.mailgun.org/messages",
@@ -127,7 +107,7 @@ def allowed_file(filename):
 def admin_view():
     return render_template('admin_view.html')
 
-@app.route('/admin', methods = ['POST'] )
+@app.route('/admin', methods = ['POST'])
 def upload():
     ''' this function handles uploading a file from csv into registers folder '''
     if request.method == 'POST':
@@ -138,10 +118,12 @@ def upload():
         if file:
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.root_path,'registers', secure_filename(request.form['date']+"-"+request.form['event_name'])+'.csv'))
-            # shutil.copy('registers/'request.form['date']+"-"+request.form['event_name'])+'.csv', 'registers')
             return render_template('upload_completed.html')
 
 
+@app.route('/register', methods = ["GET", "POST"])
+def register():
+    return 'present_attendees_id'
 
 if __name__ == '__main__':
     app.run(debug=True)
